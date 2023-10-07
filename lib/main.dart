@@ -24,20 +24,7 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
-void launchPhoneNumber(String phoneNumber) async {
-  String url = 'number:$phoneNumber';
-  if (await canLaunch(url)) {
-    await launch(url);
-  } else {
-    throw 'Telefon raqamni ochirib bo\'lmadi: $url';
-  }
-}
-
 class _MyAppState extends State<MyApp> {
-  void _callPhoneNumber(String phoneNumber) {
-    launchPhoneNumber(phoneNumber);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -130,13 +117,30 @@ class _MyAppState extends State<MyApp> {
                                 SizedBox(
                                   width: 15,
                                 ),
-                                Icon(Icons.edit),
+                                IconButton(
+                                  icon: Icon(Icons.sms),
+                                  onPressed: () async {
+                                    final number = '+1152425242';
+                                    final url = 'sms:$number';
+                                    if (await canLaunch(url)) {
+                                      await launch(url);
+                                    } else {
+                                      print('Could not launch $url');
+                                    }
+                                  },
+                                ),
                                 SizedBox(
                                   width: 15,
                                 ),
                                 IconButton(
-                                    onPressed: () {
-                                      _callPhoneNumber(box.getAt(index).number);
+                                    onPressed: () async {
+                                      final number = box.getAt(index).number;
+                                      final url = 'tel:$number';
+                                      if (await canLaunch(url)) {
+                                        await launch(url);
+                                      } else {
+                                        print('Could not launch $url');
+                                      }
                                     },
                                     icon: Icon(Icons.phone))
                               ],
